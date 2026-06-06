@@ -350,9 +350,34 @@
     }
   ];
 
-  function isSold(id) {
-    return localStorage.getItem("sold_" + id) === "1";
+  const BIN_ID  = "6a249489da38895dfe927d22";
+  const BIN_KEY = "$2a$10$82W2uOQl88avPM7dLsig0.yEX2prdPdvvTvRR5FyROPVBUYhHQYlm";
+  const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+  let soldIds = [];
+
+  async function loadSold() {
+    try {
+      const res = await fetch(BIN_URL + "/latest", { headers: { "X-Access-Key": BIN_KEY } });
+      const data = await res.json();
+      soldIds = data.record.sold || [];
+    } catch {
+      soldIds = JSON.parse(localStorage.getItem("soldIds") || "[]");
+    }
   }
+
+  async function saveSold() {
+    localStorage.setItem("soldIds", JSON.stringify(soldIds));
+    try {
+      await fetch(BIN_URL, {
+        method: "PUT",
+        headers: { "X-Access-Key": BIN_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ sold: soldIds })
+      });
+    } catch { /* offline fallback is localStorage */ }
+  }
+
+  function isSold(id) { return soldIds.includes(id); }
 
   function updateStats() {
     const total = jerseys.length;
@@ -362,10 +387,11 @@
   }
 
   function toggleStock(id, cardEl, btnEl) {
-    const sold = !isSold(id);
-    localStorage.setItem("sold_" + id, sold ? "1" : "0");
-    applyStock(cardEl, btnEl, sold);
+    if (isSold(id)) soldIds = soldIds.filter(s => s !== id);
+    else soldIds.push(id);
+    applyStock(cardEl, btnEl, isSold(id));
     updateStats();
+    saveSold();
   }
 
   function applyStock(cardEl, btnEl, sold) {
@@ -377,10 +403,12 @@
   }
 
   const grid = document.getElementById("grid");
-  updateStats();
 
-  jerseys.forEach((jersey, idx) => {
-    const sold = isSold(jersey.id);
+  async function init() {
+    await loadSold();
+    updateStats();
+    jerseys.forEach((jersey, idx) => {
+      const sold = isSold(jersey.id);
     const card = document.createElement("div");
     card.className = "card" + (sold ? " sold-out" : "");
 
@@ -426,7 +454,10 @@
     `;
 
     grid.appendChild(card);
-  });
+    });
+  }
+
+  init();
 
   function setPhoto(btn, cardIdx, photoIdx) {
     const gallery = document.getElementById(`gallery-${cardIdx}`);

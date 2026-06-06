@@ -350,16 +350,15 @@
     }
   ];
 
-  const BLOB_URL = "https://jsonblob.com/api/jsonBlob/019e9eee-481d-7ce9-8447-53c47c1c090e";
+  const FB_URL = "https://replicatrikot-default-rtdb.europe-west1.firebasedatabase.app/sold.json";
 
   let soldIds = [];
 
   async function loadSold() {
     try {
-      const res = await fetch(BLOB_URL);
+      const res = await fetch(FB_URL + "?t=" + Date.now());
       if (!res.ok) throw new Error(res.status);
-      const data = await res.json();
-      soldIds = data.sold || [];
+      soldIds = (await res.json()) || [];
     } catch {
       soldIds = JSON.parse(localStorage.getItem("soldIds") || "[]");
     }
@@ -368,10 +367,10 @@
   async function saveSold() {
     localStorage.setItem("soldIds", JSON.stringify(soldIds));
     try {
-      await fetch(BLOB_URL, {
+      await fetch(FB_URL, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sold: soldIds })
+        body: JSON.stringify(soldIds)
       });
     } catch { /* offline fallback is localStorage */ }
   }

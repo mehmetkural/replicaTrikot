@@ -207,56 +207,7 @@
 
   if (IS_ADMIN) document.body.classList.add("admin-mode");
 
-  const jerseys = [
-    {
-      id: "spain-yamal-xxl",
-      name: "España #10 Lamine Yamal",
-      size: "XXL",
-      images: ["images/IMG_0290.jpeg","images/IMG_0293.jpeg","images/IMG_0295.jpeg"]
-    },
-    {
-      id: "turkey-arda-away-s",
-      name: "Türkiye #10 Arda Güler (Away)",
-      size: "S",
-      images: ["images/IMG_0296.jpeg","images/IMG_0298.jpeg","images/IMG_0299.jpeg"]
-    },
-    {
-      id: "ronaldo-multiclub-l",
-      name: "Ronaldo Multi-Club Edition",
-      size: "L",
-      images: ["images/IMG_0304.jpeg","images/IMG_0303.jpeg","images/IMG_0305.jpeg"]
-    },
-    {
-      id: "liverpool-wirtz-l",
-      name: "Liverpool #7 Wirtz",
-      size: "L",
-      images: ["images/IMG_0306.jpeg","images/IMG_0309.jpeg","images/IMG_0308.jpeg"]
-    },
-    {
-      id: "turkey-arda-home-l",
-      name: "Türkiye #8 Arda Güler (Home)",
-      size: "L",
-      images: ["images/IMG_0314.jpeg","images/IMG_0316.jpeg","images/IMG_0315.jpeg"]
-    },
-    {
-      id: "bayern-kane-l",
-      name: "FC Bayern München #9 Kane",
-      size: "L",
-      images: ["images/IMG_0318.jpeg","images/IMG_0322.jpeg","images/IMG_0321.jpeg"]
-    },
-    {
-      id: "turkey-arda-away-l",
-      name: "Türkiye #10 Arda Güler (Away)",
-      size: "L",
-      images: ["images/IMG_0323.jpeg","images/IMG_0324.jpeg","images/IMG_0325.jpeg"]
-    },
-    {
-      id: "milan-kaka-xl",
-      name: "AC Milan #22 Kaká (UCL)",
-      size: "XL",
-      images: ["images/IMG_0327.jpeg","images/IMG_0331.jpeg"]
-    }
-  ];
+  const jerseys = [];
 
   function isSold(id) {
     return localStorage.getItem("sold_" + id) === "1";

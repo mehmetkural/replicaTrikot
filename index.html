@@ -22,6 +22,18 @@
     header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: 1px; }
     header p { font-size: 0.85rem; color: #aaa; margin-top: 4px; }
 
+    .admin-bar {
+      display: none;
+      background: #f59e0b;
+      color: #000;
+      text-align: center;
+      padding: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    body.admin-mode .admin-bar { display: block; }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -36,7 +48,9 @@
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      transition: opacity 0.2s;
     }
+    .card.sold-out { opacity: 0.55; }
 
     .gallery {
       position: relative;
@@ -54,6 +68,22 @@
       transition: opacity 0.25s;
     }
     .gallery img.active { opacity: 1; }
+
+    .sold-badge {
+      display: none;
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #ef4444;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      z-index: 2;
+    }
+    .card.sold-out .sold-badge { display: block; }
 
     .thumbs {
       display: flex;
@@ -124,6 +154,28 @@
     }
     .wa-btn:hover { background: #1ebe5c; }
     .wa-btn svg { flex-shrink: 0; }
+    .card.sold-out .wa-btn { display: none; }
+
+    .stock-toggle {
+      display: none;
+      width: 100%;
+      margin-top: 10px;
+      padding: 9px;
+      border: none;
+      border-radius: 7px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    body.admin-mode .stock-toggle { display: block; }
+    .stock-toggle.is-available {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .stock-toggle.is-sold {
+      background: #dcfce7;
+      color: #166534;
+    }
 
     footer {
       text-align: center;
@@ -135,6 +187,8 @@
 </head>
 <body>
 
+<div class="admin-bar">⚙️ Admin-Modus — Klicke auf einen Button um den Lagerstand zu ändern</div>
+
 <header>
   <h1>Trikot Shop</h1>
   <p>Replica Trikots · 19 € pro Stück</p>
@@ -145,103 +199,108 @@
 <footer>Bei Interesse einfach per WhatsApp melden.</footer>
 
 <script>
-  const WHATSAPP = "4917661678782"; // ← Hier deine Nummer eintragen, z.B. "4915112345678"
+  const WHATSAPP = "4917661678782";
+  const IS_ADMIN = new URLSearchParams(location.search).has("admin");
+
+  if (IS_ADMIN) document.body.classList.add("admin-mode");
 
   const jerseys = [
     {
+      id: "spain-yamal-xxl",
       name: "España #10 Lamine Yamal",
       size: "XXL",
-      images: [
-        "images/IMG_0290.jpeg",
-        "images/IMG_0293.jpeg",
-        "images/IMG_0295.jpeg"
-      ]
+      images: ["images/IMG_0290.jpeg","images/IMG_0293.jpeg","images/IMG_0295.jpeg"]
     },
     {
+      id: "turkey-arda-away-s",
       name: "Türkiye #10 Arda Güler (Away)",
       size: "S",
-      images: [
-        "images/IMG_0296.jpeg",
-        "images/IMG_0298.jpeg",
-        "images/IMG_0299.jpeg"
-      ]
+      images: ["images/IMG_0296.jpeg","images/IMG_0298.jpeg","images/IMG_0299.jpeg"]
     },
     {
+      id: "ronaldo-multiclub-l",
       name: "Ronaldo Multi-Club Edition",
       size: "L",
-      images: [
-        "images/IMG_0304.jpeg",
-        "images/IMG_0303.jpeg",
-        "images/IMG_0305.jpeg"
-      ]
+      images: ["images/IMG_0304.jpeg","images/IMG_0303.jpeg","images/IMG_0305.jpeg"]
     },
     {
+      id: "liverpool-wirtz-l",
       name: "Liverpool #7 Wirtz",
       size: "L",
-      images: [
-        "images/IMG_0306.jpeg",
-        "images/IMG_0309.jpeg",
-        "images/IMG_0308.jpeg"
-      ]
+      images: ["images/IMG_0306.jpeg","images/IMG_0309.jpeg","images/IMG_0308.jpeg"]
     },
     {
+      id: "turkey-arda-home-l",
       name: "Türkiye #8 Arda Güler (Home)",
       size: "L",
-      images: [
-        "images/IMG_0314.jpeg",
-        "images/IMG_0316.jpeg",
-        "images/IMG_0315.jpeg"
-      ]
+      images: ["images/IMG_0314.jpeg","images/IMG_0316.jpeg","images/IMG_0315.jpeg"]
     },
     {
+      id: "bayern-kane-l",
       name: "FC Bayern München #9 Kane",
       size: "L",
-      images: [
-        "images/IMG_0318.jpeg",
-        "images/IMG_0322.jpeg",
-        "images/IMG_0321.jpeg"
-      ]
+      images: ["images/IMG_0318.jpeg","images/IMG_0322.jpeg","images/IMG_0321.jpeg"]
     },
     {
+      id: "turkey-arda-away-l",
       name: "Türkiye #10 Arda Güler (Away)",
       size: "L",
-      images: [
-        "images/IMG_0323.jpeg",
-        "images/IMG_0324.jpeg",
-        "images/IMG_0325.jpeg"
-      ]
+      images: ["images/IMG_0323.jpeg","images/IMG_0324.jpeg","images/IMG_0325.jpeg"]
     },
     {
+      id: "milan-kaka-xl",
       name: "AC Milan #22 Kaká (UCL)",
       size: "XL",
-      images: [
-        "images/IMG_0327.jpeg",
-        "images/IMG_0331.jpeg"
-      ]
+      images: ["images/IMG_0327.jpeg","images/IMG_0331.jpeg"]
     }
   ];
+
+  function isSold(id) {
+    return localStorage.getItem("sold_" + id) === "1";
+  }
+
+  function toggleStock(id, cardEl, btnEl) {
+    const sold = !isSold(id);
+    localStorage.setItem("sold_" + id, sold ? "1" : "0");
+    applyStock(cardEl, btnEl, sold);
+  }
+
+  function applyStock(cardEl, btnEl, sold) {
+    cardEl.classList.toggle("sold-out", sold);
+    if (btnEl) {
+      btnEl.textContent = sold ? "✓ Wieder verfügbar machen" : "✗ Als verkauft markieren";
+      btnEl.className = "stock-toggle " + (sold ? "is-sold" : "is-available");
+    }
+  }
 
   const grid = document.getElementById("grid");
 
   jerseys.forEach((jersey, idx) => {
+    const sold = isSold(jersey.id);
     const card = document.createElement("div");
-    card.className = "card";
+    card.className = "card" + (sold ? " sold-out" : "");
 
     const msg = encodeURIComponent(`Hallo! Ich interessiere mich für das Trikot: ${jersey.name} (Größe ${jersey.size}) für 19 €. Ist es noch verfügbar?`);
     const waLink = `https://wa.me/${WHATSAPP}?text=${msg}`;
 
     const imgTags = jersey.images.map((src, i) =>
-      `<img src="${src}" class="${i === 0 ? 'active' : ''}" loading="lazy" alt="${jersey.name}">`
+      `<img src="${src}" class="${i === 0 ? "active" : ""}" loading="lazy" alt="${jersey.name}">`
     ).join("");
 
     const thumbTags = jersey.images.map((src, i) =>
-      `<button class="${i === 0 ? 'active' : ''}" onclick="setPhoto(this, ${idx}, ${i})">
+      `<button class="${i === 0 ? "active" : ""}" onclick="setPhoto(this,${idx},${i})">
         <img src="${src}" loading="lazy" alt="">
       </button>`
     ).join("");
 
+    const toggleLabel = sold ? "✓ Wieder verfügbar machen" : "✗ Als verkauft markieren";
+    const toggleClass = sold ? "is-sold" : "is-available";
+
     card.innerHTML = `
-      <div class="gallery" id="gallery-${idx}">${imgTags}</div>
+      <div class="gallery" id="gallery-${idx}">
+        ${imgTags}
+        <span class="sold-badge">VERKAUFT</span>
+      </div>
       <div class="thumbs">${thumbTags}</div>
       <div class="info">
         <h2>${jersey.name}</h2>
@@ -255,6 +314,9 @@
           </svg>
           Per WhatsApp anfragen
         </a>
+        <button class="stock-toggle ${toggleClass}" onclick="toggleStock('${jersey.id}', this.closest('.card'), this)">
+          ${toggleLabel}
+        </button>
       </div>
     `;
 
@@ -266,8 +328,7 @@
     gallery.querySelectorAll("img").forEach((img, i) => {
       img.classList.toggle("active", i === photoIdx);
     });
-    const card = btn.closest(".card");
-    card.querySelectorAll(".thumbs button").forEach((b, i) => {
+    btn.closest(".card").querySelectorAll(".thumbs button").forEach((b, i) => {
       b.classList.toggle("active", i === photoIdx);
     });
   }

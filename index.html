@@ -207,7 +207,148 @@
 
   if (IS_ADMIN) document.body.classList.add("admin-mode");
 
-  const jerseys = [];
+  const jerseys = [
+    {
+      id: "real-madrid-ronaldo-ucl-l",
+      name: "Real Madrid #7 Ronaldo",
+      detail: "UCL Final Kyiv 2018",
+      size: "L",
+      images: ["images/IMG_0540.jpeg","images/IMG_0542.jpeg","images/IMG_0541.jpeg"]
+    },
+    {
+      id: "mufc-ronaldo-away-l",
+      name: "Manchester United #7 Ronaldo",
+      detail: "Away · 40th Anniversary",
+      size: "L",
+      images: ["images/IMG_0543.jpeg","images/IMG_0545.jpeg","images/IMG_0544.jpeg"]
+    },
+    {
+      id: "barca-ronaldinho-home",
+      name: "FC Barcelona #10 Ronaldinho",
+      detail: "Home · UNICEF",
+      size: "—",
+      images: ["images/IMG_0546.jpeg","images/IMG_0547.jpeg"]
+    },
+    {
+      id: "portugal-ronaldo-home-l",
+      name: "Portugal #7 Ronaldo",
+      detail: "Home · Puma",
+      size: "L",
+      images: ["images/IMG_0548.jpeg","images/IMG_0550.jpeg","images/IMG_0549.jpeg"]
+    },
+    {
+      id: "turkey-arda-away-marble-l",
+      name: "Türkiye #10 Arda Güler",
+      detail: "Away · Marble",
+      size: "L",
+      images: ["images/IMG_0551.jpeg","images/IMG_0554.jpeg","images/IMG_0553.jpeg"]
+    },
+    {
+      id: "psg-djoue-home-l",
+      name: "PSG #11 D.Doué",
+      detail: "Home · Qatar Airways",
+      size: "L",
+      images: ["images/IMG_0555.jpeg","images/IMG_0557.jpeg","images/IMG_0556.jpeg"]
+    },
+    {
+      id: "turkey-yildiz-home-xl",
+      name: "Türkiye #11 Yıldız",
+      detail: "Home · Kırmızı",
+      size: "XL",
+      images: ["images/IMG_0558.jpeg","images/IMG_0560.jpeg","images/IMG_0559.jpeg"]
+    },
+    {
+      id: "barca-yamal-home-l",
+      name: "FC Barcelona #10 Lamine Yamal",
+      detail: "Home · Spotify 2024–25",
+      size: "L",
+      images: ["images/IMG_0561.jpeg","images/IMG_0563.jpeg","images/IMG_0562.jpeg"]
+    },
+    {
+      id: "real-madrid-mbappe-home-xl",
+      name: "Real Madrid #10 Mbappé",
+      detail: "Home · Emirates 2024–25",
+      size: "XL",
+      images: ["images/IMG_0564.jpeg","images/IMG_0566.jpeg","images/IMG_0565.jpeg"]
+    },
+    {
+      id: "turkey-home-red-marble-l",
+      name: "Türkiye #10",
+      detail: "Home · Kırmızı Marble",
+      size: "L",
+      images: ["images/IMG_0567.jpeg","images/IMG_0569.jpeg","images/IMG_0568.jpeg"]
+    },
+    {
+      id: "arsenal-rice-home-l",
+      name: "Arsenal #41 Rice",
+      detail: "Home · Emirates",
+      size: "L",
+      images: ["images/IMG_0570.jpeg","images/IMG_0572.jpeg","images/IMG_0571.jpeg"]
+    },
+    {
+      id: "turkey-arda-away-marble-xl",
+      name: "Türkiye #10 Arda Güler",
+      detail: "Away · Marble",
+      size: "XL",
+      images: ["images/IMG_0573.jpeg","images/IMG_0575.jpeg","images/IMG_0574.jpeg"]
+    },
+    {
+      id: "france-mbappe-home-l",
+      name: "France #10 Mbappé",
+      detail: "Home · FFF",
+      size: "L",
+      images: ["images/IMG_0576.jpeg","images/IMG_0578.jpeg","images/IMG_0577.jpeg"]
+    },
+    {
+      id: "spain-yamal-home-xxl",
+      name: "España #10 Lamine Yamal",
+      detail: "Home · La Roja",
+      size: "XXL",
+      images: ["images/IMG_0579.jpeg","images/IMG_0581.jpeg","images/IMG_0580.jpeg"]
+    },
+    {
+      id: "real-madrid-mbappe-home-l",
+      name: "Real Madrid #10 Mbappé",
+      detail: "Home · Emirates 2024–25",
+      size: "L",
+      images: ["images/IMG_0582.jpeg","images/IMG_0584.jpeg","images/IMG_0583.jpeg"]
+    },
+    {
+      id: "real-madrid-mbappe-home-m",
+      name: "Real Madrid #10 Mbappé",
+      detail: "Home · Emirates 2024–25",
+      size: "M",
+      images: ["images/IMG_0585.jpeg","images/IMG_0587.jpeg","images/IMG_0586.jpeg"]
+    },
+    {
+      id: "real-madrid-mbappe-dragon-xl",
+      name: "Real Madrid Mbappé",
+      detail: "Dragon Edition · Black/Gold",
+      size: "XL",
+      images: ["images/IMG_0588.jpeg","images/IMG_0590.jpeg","images/IMG_0589.jpeg"]
+    },
+    {
+      id: "turkey-arda-home-red-l",
+      name: "Türkiye #10 Arda Güler",
+      detail: "Home · Kırmızı Marble",
+      size: "L",
+      images: ["images/IMG_0591.jpeg","images/IMG_0593.jpeg","images/IMG_0592.jpeg"]
+    },
+    {
+      id: "turkey-arda-home-white-l",
+      name: "Türkiye #8 Arda Güler",
+      detail: "Home · Beyaz/Kırmızı",
+      size: "L",
+      images: ["images/IMG_0594.jpeg","images/IMG_0596.jpeg","images/IMG_0595.jpeg"]
+    },
+    {
+      id: "milan-kaka-away-m",
+      name: "AC Milan #22 Kaká",
+      detail: "Away · UCL · bwin",
+      size: "M",
+      images: ["images/IMG_0598.jpeg","images/IMG_0600.jpeg","images/IMG_0599.jpeg"]
+    }
+  ];
 
   function isSold(id) {
     return localStorage.getItem("sold_" + id) === "1";
@@ -267,6 +408,7 @@
       <div class="thumbs">${thumbTags}</div>
       <div class="info">
         <h2>${jersey.name}</h2>
+        ${jersey.detail ? `<p style="font-size:0.78rem;color:#777;margin-top:3px">${jersey.detail}</p>` : ""}
         <div class="meta">
           <span class="size-badge">Größe ${jersey.size}</span>
           <span class="price">19 €</span>

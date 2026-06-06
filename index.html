@@ -350,17 +350,16 @@
     }
   ];
 
-  const BIN_ID  = "6a249489da38895dfe927d22";
-  const BIN_KEY = "$2a$10$82W2uOQl88avPM7dLsig0.yEX2prdPdvvTvRR5FyROPVBUYhHQYlm";
-  const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+  const BLOB_URL = "https://jsonblob.com/api/jsonBlob/019e9eee-481d-7ce9-8447-53c47c1c090e";
 
   let soldIds = [];
 
   async function loadSold() {
     try {
-      const res = await fetch(BIN_URL + "/latest", { headers: { "X-Access-Key": BIN_KEY } });
+      const res = await fetch(BLOB_URL);
+      if (!res.ok) throw new Error(res.status);
       const data = await res.json();
-      soldIds = data.record.sold || [];
+      soldIds = data.sold || [];
     } catch {
       soldIds = JSON.parse(localStorage.getItem("soldIds") || "[]");
     }
@@ -369,9 +368,9 @@
   async function saveSold() {
     localStorage.setItem("soldIds", JSON.stringify(soldIds));
     try {
-      await fetch(BIN_URL, {
+      await fetch(BLOB_URL, {
         method: "PUT",
-        headers: { "X-Access-Key": BIN_KEY, "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sold: soldIds })
       });
     } catch { /* offline fallback is localStorage */ }

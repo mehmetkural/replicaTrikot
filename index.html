@@ -254,6 +254,29 @@
     .cart-clear-btn:hover { background: #444; color: #fff; }
 
     body.has-cart { padding-bottom: 70px; }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 16px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .filter-btn {
+      padding: 7px 16px;
+      border: 2px solid #ddd;
+      border-radius: 99px;
+      background: #fff;
+      color: #444;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .filter-btn:hover { border-color: #111; color: #111; }
+    .filter-btn.active { background: #111; color: #fff; border-color: #111; }
   </style>
 </head>
 <body>
@@ -265,6 +288,15 @@
   <p>Replica Trikots · 19 € pro Stück</p>
   <p class="stats" id="stats"></p>
 </header>
+
+<div class="filter-bar" id="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('all', this)">Alle</button>
+  <button class="filter-btn" onclick="setFilter('turkiye', this)">🇹🇷 Türkiye</button>
+  <button class="filter-btn" onclick="setFilter('national', this)">🌍 Nationalmannschaften</button>
+  <button class="filter-btn" onclick="setFilter('english', this)">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Englische Vereine</button>
+  <button class="filter-btn" onclick="setFilter('deutsch', this)">🇩🇪 Deutsche Vereine</button>
+  <button class="filter-btn" onclick="setFilter('andere', this)">⚽ Andere Vereine</button>
+</div>
 
 <div class="grid" id="grid"></div>
 
@@ -291,6 +323,7 @@
       name: "Real Madrid #7 Ronaldo",
       detail: "UCL Final Kyiv 2018",
       size: "L",
+      category: "andere",
       images: ["images/IMG_0540.jpeg","images/IMG_0542.jpeg","images/IMG_0541.jpeg"]
     },
     {
@@ -298,6 +331,7 @@
       name: "Manchester United #7 Ronaldo",
       detail: "Away · 40th Anniversary",
       size: "L",
+      category: "english",
       images: ["images/IMG_0543.jpeg","images/IMG_0545.jpeg","images/IMG_0544.jpeg"]
     },
     {
@@ -305,6 +339,7 @@
       name: "FC Barcelona #10 Ronaldinho",
       detail: "Home · UNICEF",
       size: "—",
+      category: "andere",
       images: ["images/IMG_0546.jpeg","images/IMG_0547.jpeg"]
     },
     {
@@ -312,6 +347,7 @@
       name: "Portugal #7 Ronaldo",
       detail: "Home · Puma",
       size: "L",
+      category: "national",
       images: ["images/IMG_0548.jpeg","images/IMG_0550.jpeg","images/IMG_0549.jpeg"]
     },
     {
@@ -319,6 +355,7 @@
       name: "Türkiye #10 Arda Güler",
       detail: "Away · Marble",
       size: "L",
+      category: "turkiye",
       images: ["images/IMG_0551.jpeg","images/IMG_0554.jpeg","images/IMG_0553.jpeg"]
     },
     {
@@ -326,6 +363,7 @@
       name: "PSG #11 D.Doué",
       detail: "Home · Qatar Airways",
       size: "L",
+      category: "andere",
       images: ["images/IMG_0555.jpeg","images/IMG_0557.jpeg","images/IMG_0556.jpeg"]
     },
     {
@@ -333,6 +371,7 @@
       name: "Türkiye #11 Yıldız",
       detail: "Home · Kırmızı",
       size: "XL",
+      category: "turkiye",
       images: ["images/IMG_0558.jpeg","images/IMG_0560.jpeg","images/IMG_0559.jpeg"]
     },
     {
@@ -340,6 +379,7 @@
       name: "FC Barcelona #10 Lamine Yamal",
       detail: "Home · Spotify 2024–25",
       size: "L",
+      category: "andere",
       images: ["images/IMG_0561.jpeg","images/IMG_0563.jpeg","images/IMG_0562.jpeg"]
     },
     {
@@ -347,6 +387,7 @@
       name: "Real Madrid #10 Mbappé",
       detail: "Home · Emirates 2024–25",
       size: "XL",
+      category: "andere",
       images: ["images/IMG_0564.jpeg","images/IMG_0566.jpeg","images/IMG_0565.jpeg"]
     },
     {
@@ -354,6 +395,7 @@
       name: "Türkiye #10",
       detail: "Home · Kırmızı Marble",
       size: "L",
+      category: "turkiye",
       images: ["images/IMG_0567.jpeg","images/IMG_0569.jpeg","images/IMG_0568.jpeg"]
     },
     {
@@ -361,6 +403,7 @@
       name: "Arsenal #41 Rice",
       detail: "Home · Emirates",
       size: "L",
+      category: "english",
       images: ["images/IMG_0570.jpeg","images/IMG_0572.jpeg","images/IMG_0571.jpeg"]
     },
     {
@@ -368,6 +411,7 @@
       name: "Türkiye #10 Arda Güler",
       detail: "Away · Marble",
       size: "XL",
+      category: "turkiye",
       images: ["images/IMG_0573.jpeg","images/IMG_0575.jpeg","images/IMG_0574.jpeg"]
     },
     {
@@ -375,6 +419,7 @@
       name: "France #10 Mbappé",
       detail: "Home · FFF",
       size: "L",
+      category: "national",
       images: ["images/IMG_0576.jpeg","images/IMG_0578.jpeg","images/IMG_0577.jpeg"]
     },
     {
@@ -382,6 +427,7 @@
       name: "España #10 Lamine Yamal",
       detail: "Home · La Roja",
       size: "XXL",
+      category: "national",
       images: ["images/IMG_0579.jpeg","images/IMG_0581.jpeg","images/IMG_0580.jpeg"]
     },
     {
@@ -389,6 +435,7 @@
       name: "Real Madrid #10 Mbappé",
       detail: "Home · Emirates 2024–25",
       size: "L",
+      category: "andere",
       images: ["images/IMG_0582.jpeg","images/IMG_0584.jpeg","images/IMG_0583.jpeg"]
     },
     {
@@ -396,6 +443,7 @@
       name: "Real Madrid #10 Mbappé",
       detail: "Home · Emirates 2024–25",
       size: "M",
+      category: "andere",
       images: ["images/IMG_0585.jpeg","images/IMG_0587.jpeg","images/IMG_0586.jpeg"]
     },
     {
@@ -403,6 +451,7 @@
       name: "Real Madrid Mbappé",
       detail: "Dragon Edition · Black/Gold",
       size: "XL",
+      category: "andere",
       images: ["images/IMG_0588.jpeg","images/IMG_0590.jpeg","images/IMG_0589.jpeg"]
     },
     {
@@ -410,6 +459,7 @@
       name: "Türkiye #10 Arda Güler",
       detail: "Home · Kırmızı Marble",
       size: "L",
+      category: "turkiye",
       images: ["images/IMG_0591.jpeg","images/IMG_0593.jpeg","images/IMG_0592.jpeg"]
     },
     {
@@ -417,6 +467,7 @@
       name: "Türkiye #8 Arda Güler",
       detail: "Home · Beyaz/Kırmızı",
       size: "L",
+      category: "turkiye",
       images: ["images/IMG_0594.jpeg","images/IMG_0596.jpeg","images/IMG_0595.jpeg"]
     },
     {
@@ -424,6 +475,7 @@
       name: "AC Milan #22 Kaká",
       detail: "Away · UCL · bwin",
       size: "M",
+      category: "andere",
       images: ["images/IMG_0598.jpeg","images/IMG_0600.jpeg","images/IMG_0599.jpeg"]
     }
   ];
@@ -487,6 +539,7 @@
       const sold = isSold(jersey.id);
     const card = document.createElement("div");
     card.className = "card" + (sold ? " sold-out" : "");
+    card.dataset.category = jersey.category;
 
     const msg = encodeURIComponent(`Hallo! Ich interessiere mich für das Trikot: ${jersey.name} (Größe ${jersey.size}) für 19 €. Ist es noch verfügbar?`);
     const waLink = `https://wa.me/${WHATSAPP}?text=${msg}`;
@@ -586,6 +639,18 @@
       `Hallo! Ich interessiere mich für folgende Trikots:\n\n${lines}\n\nGesamt: ${cart.length} × 19 € = ${total} €\n\nSind sie noch verfügbar?`
     );
     window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, "_blank");
+  }
+
+  let activeFilter = "all";
+
+  function setFilter(cat, btn) {
+    activeFilter = cat;
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".card").forEach(card => {
+      const match = cat === "all" || card.dataset.category === cat;
+      card.style.display = match ? "" : "none";
+    });
   }
 
   function setPhoto(btn, cardIdx, photoIdx) {

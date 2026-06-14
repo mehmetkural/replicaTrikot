@@ -318,6 +318,111 @@
       letter-spacing: 0.5px;
     }
     .lang-btn.active { background: #fff; color: #111; border-color: #fff; }
+
+    /* Vitrin */
+    .vitrin {
+      position: relative;
+      width: 100%;
+      height: clamp(280px, 55vh, 500px);
+      overflow: hidden;
+      background: #111;
+    }
+    .vitrin-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+      pointer-events: none;
+    }
+    .vitrin-slide.active { opacity: 1; pointer-events: auto; }
+    .vitrin-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+    .vitrin-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 45%, transparent 70%),
+        linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 55%);
+    }
+    .vitrin-info {
+      position: absolute;
+      bottom: 52px;
+      left: 24px;
+      right: 24px;
+      color: #fff;
+    }
+    @media (min-width: 560px) {
+      .vitrin-info { left: 40px; right: auto; max-width: 380px; }
+    }
+    .vitrin-info h2 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 4px;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+    }
+    .vitrin-info p { font-size: 0.85rem; color: #ddd; margin-top: 3px; }
+    .vitrin-price { font-size: 1.5rem; font-weight: 800; margin: 10px 0 14px; }
+    .vitrin-wa {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: #25d366;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .vitrin-wa:hover { background: #1ebe5c; }
+    .vitrin-dots {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 2;
+    }
+    .vitrin-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .vitrin-dot.active { background: #fff; transform: scale(1.35); }
+    .vitrin-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.35);
+      color: #fff;
+      border: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: background 0.15s;
+      line-height: 1;
+    }
+    .vitrin-arrow:hover { background: rgba(0,0,0,0.6); }
+    .vitrin-arrow-left { left: 12px; }
+    .vitrin-arrow-right { right: 12px; }
   </style>
 </head>
 <body>
@@ -334,6 +439,8 @@
     <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
   </div>
 </header>
+
+<div id="vitrin"></div>
 
 <div class="filter-bar" id="filter-bar">
   <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">Alle</button>
@@ -364,6 +471,13 @@
   const IS_ADMIN = new URLSearchParams(location.search).has("admin");
 
   if (IS_ADMIN) document.body.classList.add("admin-mode");
+
+  const FEATURED_IDS = [
+    "real-madrid-arda-home-l",
+    "liverpool-wirtz-home-l",
+    "real-madrid-mbappe-dragon-xl",
+    "barca-yamal-home-l"
+  ];
 
   const LANG_KEY = "trikot-lang";
   let currentLang = localStorage.getItem(LANG_KEY) || "de";
@@ -731,9 +845,84 @@
 
   const grid = document.getElementById("grid");
 
+  let vitrinIdx = 0;
+  let vitrinTimer = null;
+  const WA_SVG = `<svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.83.74 5.485 2.032 7.793L0 32l8.456-2.007A15.94 15.94 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 01-6.77-1.848l-.484-.288-5.02 1.192 1.213-4.886-.315-.502A13.253 13.253 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.27-9.942c-.398-.2-2.354-1.161-2.718-1.294-.365-.133-.63-.2-.896.2-.265.398-1.028 1.294-1.26 1.56-.232.265-.465.298-.863.1-.398-.2-1.681-.62-3.2-1.975-1.183-1.055-1.981-2.357-2.213-2.755-.232-.398-.025-.613.174-.812.179-.178.398-.465.597-.697.2-.232.265-.398.398-.663.133-.265.066-.497-.033-.697-.1-.2-.896-2.16-1.228-2.956-.323-.775-.652-.67-.896-.682-.232-.012-.497-.015-.763-.015s-.697.1-1.063.497c-.365.398-1.394 1.362-1.394 3.32s1.427 3.851 1.627 4.116c.2.265 2.81 4.286 6.808 6.013.952.41 1.694.656 2.274.84.954.303 1.824.26 2.51.158.766-.113 2.354-.963 2.686-1.892.333-.93.333-1.726.232-1.892-.099-.166-.365-.265-.763-.464z"/></svg>`;
+
+  function buildVitrin() {
+    const featured = FEATURED_IDS.map(id => jerseys.find(j => j.id === id)).filter(Boolean);
+    const container = document.getElementById("vitrin");
+    if (!container || !featured.length) return;
+    container.innerHTML = "";
+    vitrinIdx = 0;
+    const t = T[currentLang];
+
+    featured.forEach((jersey, i) => {
+      const slide = document.createElement("div");
+      slide.className = "vitrin-slide" + (i === 0 ? " active" : "");
+      slide.innerHTML = `
+        <img class="vitrin-img" src="${jersey.images[0]}" loading="${i === 0 ? "eager" : "lazy"}" alt="${jersey.name}">
+        <div class="vitrin-overlay"></div>
+        <div class="vitrin-info">
+          <h2>${jersey.name}</h2>
+          ${jersey.detail ? `<p>${jersey.detail}</p>` : ""}
+          <p class="vitrin-size" data-size="${jersey.size}">${t.size} ${jersey.size}</p>
+          <div class="vitrin-price">19 €</div>
+          <button class="vitrin-wa" onclick="openWA('${jersey.id}')">
+            ${WA_SVG}<span class="vitrin-wa-text">${t.waBtn}</span>
+          </button>
+        </div>
+      `;
+      container.appendChild(slide);
+    });
+
+    const dotsEl = document.createElement("div");
+    dotsEl.className = "vitrin-dots";
+    featured.forEach((_, i) => {
+      const dot = document.createElement("button");
+      dot.className = "vitrin-dot" + (i === 0 ? " active" : "");
+      dot.onclick = () => goVitrin(i);
+      dotsEl.appendChild(dot);
+    });
+    container.appendChild(dotsEl);
+
+    const arrowL = document.createElement("button");
+    arrowL.className = "vitrin-arrow vitrin-arrow-left";
+    arrowL.textContent = "‹";
+    arrowL.onclick = () => goVitrin((vitrinIdx - 1 + featured.length) % featured.length);
+    container.appendChild(arrowL);
+
+    const arrowR = document.createElement("button");
+    arrowR.className = "vitrin-arrow vitrin-arrow-right";
+    arrowR.textContent = "›";
+    arrowR.onclick = () => goVitrin((vitrinIdx + 1) % featured.length);
+    container.appendChild(arrowR);
+
+    startVitrinTimer(featured.length);
+    container.addEventListener("mouseenter", () => clearInterval(vitrinTimer));
+    container.addEventListener("mouseleave", () => startVitrinTimer(featured.length));
+  }
+
+  function goVitrin(idx) {
+    const slides = document.querySelectorAll(".vitrin-slide");
+    const dots = document.querySelectorAll(".vitrin-dot");
+    if (!slides.length) return;
+    slides[vitrinIdx].classList.remove("active");
+    dots[vitrinIdx].classList.remove("active");
+    vitrinIdx = idx;
+    slides[vitrinIdx].classList.add("active");
+    dots[vitrinIdx].classList.add("active");
+  }
+
+  function startVitrinTimer(count) {
+    clearInterval(vitrinTimer);
+    vitrinTimer = setInterval(() => goVitrin((vitrinIdx + 1) % count), 4500);
+  }
+
   async function init() {
     await loadStock();
     applyLangToStatic();
+    buildVitrin();
     updateStats();
     jerseys.forEach((jersey, idx) => {
       const t = T[currentLang];
@@ -866,6 +1055,10 @@
     document.querySelector("[data-filter='andere']").textContent = t.filterAndere;
     document.querySelectorAll(".lang-btn").forEach(btn => {
       btn.classList.toggle("active", btn.dataset.lang === currentLang);
+    });
+    document.querySelectorAll(".vitrin-wa-text").forEach(el => el.textContent = t.waBtn);
+    document.querySelectorAll(".vitrin-size").forEach(el => {
+      el.textContent = `${t.size} ${el.dataset.size}`;
     });
   }
 

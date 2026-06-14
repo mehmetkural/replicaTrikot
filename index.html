@@ -158,25 +158,47 @@
     .wa-btn svg { flex-shrink: 0; }
     .card.sold-out .wa-btn { display: none; }
 
-    .stock-toggle {
+    .stock-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.62);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      z-index: 2;
+    }
+    .card.sold-out .stock-badge { display: none; }
+
+    .stock-controls {
       display: none;
-      width: 100%;
+      align-items: center;
+      gap: 8px;
       margin-top: 10px;
-      padding: 9px;
-      border: none;
+      background: #f5f5f5;
       border-radius: 7px;
+      padding: 6px 10px;
+    }
+    body.admin-mode .stock-controls { display: flex; }
+    .stock-controls button {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .stock-count-display {
+      flex: 1;
+      text-align: center;
       font-size: 0.85rem;
       font-weight: 600;
-      cursor: pointer;
-    }
-    body.admin-mode .stock-toggle { display: block; }
-    .stock-toggle.is-available {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-    .stock-toggle.is-sold {
-      background: #dcfce7;
-      color: #166534;
+      color: #333;
     }
 
     footer {
@@ -546,66 +568,91 @@
     }
   ];
 
-  const FB_URL = "https://replicatrikot-default-rtdb.europe-west1.firebasedatabase.app/sold.json";
+  const FB_SOLD_URL = "https://replicatrikot-default-rtdb.europe-west1.firebasedatabase.app/sold.json";
+  const FB_STOCK_URL = "https://replicatrikot-default-rtdb.europe-west1.firebasedatabase.app/stock.json";
 
-  let soldIds = [];
+  const STOCK_DEFAULTS = { "barca-yamal-home-l": 2 };
+  function getInitialStock(id) { return STOCK_DEFAULTS[id] ?? 1; }
 
-  async function loadSold() {
+  let stockData = {};
+
+  async function loadStock() {
     try {
-      const res = await fetch(FB_URL + "?t=" + Date.now());
+      const res = await fetch(FB_STOCK_URL + "?t=" + Date.now());
       if (!res.ok) throw new Error(res.status);
-      soldIds = (await res.json()) || [];
+      const data = await res.json();
+      if (data && Object.keys(data).length > 0) {
+        stockData = data;
+      } else {
+        // İlk çalıştırma: eski sold.json'dan migrate et
+        try {
+          const soldRes = await fetch(FB_SOLD_URL + "?t=" + Date.now());
+          const soldIds = soldRes.ok ? ((await soldRes.json()) || []) : [];
+          jerseys.forEach(j => {
+            stockData[j.id] = soldIds.includes(j.id) ? 0 : getInitialStock(j.id);
+          });
+        } catch {
+          jerseys.forEach(j => { stockData[j.id] = getInitialStock(j.id); });
+        }
+        await saveStock();
+      }
     } catch {
-      soldIds = JSON.parse(localStorage.getItem("soldIds") || "[]");
+      const local = JSON.parse(localStorage.getItem("stockData") || "{}");
+      jerseys.forEach(j => {
+        stockData[j.id] = j.id in local ? local[j.id] : getInitialStock(j.id);
+      });
     }
+    jerseys.forEach(j => { if (!(j.id in stockData)) stockData[j.id] = getInitialStock(j.id); });
   }
 
-  async function saveSold() {
-    localStorage.setItem("soldIds", JSON.stringify(soldIds));
+  async function saveStock() {
+    localStorage.setItem("stockData", JSON.stringify(stockData));
     try {
-      await fetch(FB_URL, {
+      await fetch(FB_STOCK_URL, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(soldIds)
+        body: JSON.stringify(stockData)
       });
-    } catch { /* offline fallback is localStorage */ }
+    } catch {}
   }
 
-  function isSold(id) { return soldIds.includes(id); }
+  function getStock(id) { return stockData[id] ?? getInitialStock(id); }
+  function isSoldOut(id) { return getStock(id) <= 0; }
 
   function updateStats() {
     const total = jerseys.length;
-    const active = jerseys.filter(j => !isSold(j.id)).length;
+    const active = jerseys.filter(j => !isSoldOut(j.id)).length;
     document.getElementById("stats").innerHTML =
       `<span>${active}</span> / ${total} verfügbar`;
   }
 
-  function toggleStock(id, cardEl, btnEl) {
-    if (isSold(id)) soldIds = soldIds.filter(s => s !== id);
-    else soldIds.push(id);
-    applyStock(cardEl, btnEl, isSold(id));
-    updateStats();
-    saveSold();
-  }
-
-  function applyStock(cardEl, btnEl, sold) {
-    cardEl.classList.toggle("sold-out", sold);
-    if (btnEl) {
-      btnEl.textContent = sold ? "✓ Wieder verfügbar machen" : "✗ Als verkauft markieren";
-      btnEl.className = "stock-toggle " + (sold ? "is-sold" : "is-available");
+  function adjustStock(id, delta) {
+    const newStock = Math.max(0, getStock(id) + delta);
+    stockData[id] = newStock;
+    const card = document.querySelector(`.card[data-jersey-id="${id}"]`);
+    if (card) {
+      card.classList.toggle("sold-out", newStock === 0);
+      const badge = document.getElementById(`stock-badge-${id}`);
+      if (badge) badge.textContent = newStock + " adet";
+      const display = document.getElementById(`stock-display-${id}`);
+      if (display) display.textContent = newStock + " Stück";
     }
+    updateStats();
+    saveStock();
   }
 
   const grid = document.getElementById("grid");
 
   async function init() {
-    await loadSold();
+    await loadStock();
     updateStats();
     jerseys.forEach((jersey, idx) => {
-      const sold = isSold(jersey.id);
+      const stock = getStock(jersey.id);
+      const soldOut = stock <= 0;
     const card = document.createElement("div");
-    card.className = "card" + (sold ? " sold-out" : "");
+    card.className = "card" + (soldOut ? " sold-out" : "");
     card.dataset.category = jersey.category;
+    card.dataset.jerseyId = jersey.id;
 
     const msg = encodeURIComponent(`Hallo! Ich interessiere mich für das Trikot: ${jersey.name} (Größe ${jersey.size}) für 19 €. Ist es noch verfügbar?`);
     const waLink = `https://wa.me/${WHATSAPP}?text=${msg}`;
@@ -620,13 +667,11 @@
       </button>`
     ).join("");
 
-    const toggleLabel = sold ? "✓ Wieder verfügbar machen" : "✗ Als verkauft markieren";
-    const toggleClass = sold ? "is-sold" : "is-available";
-
     card.innerHTML = `
       <div class="gallery" id="gallery-${idx}">
         ${imgTags}
         <span class="sold-badge">VERKAUFT</span>
+        <span class="stock-badge" id="stock-badge-${jersey.id}">${stock} adet</span>
       </div>
       <div class="thumbs">${thumbTags}</div>
       <div class="info">
@@ -645,9 +690,11 @@
         <button class="cart-btn" data-id="${jersey.id}" onclick="toggleCart('${jersey.id}', this)">
           🛒 In den Warenkorb
         </button>
-        <button class="stock-toggle ${toggleClass}" onclick="toggleStock('${jersey.id}', this.closest('.card'), this)">
-          ${toggleLabel}
-        </button>
+        <div class="stock-controls">
+          <button onclick="adjustStock('${jersey.id}', -1)">−</button>
+          <span class="stock-count-display" id="stock-display-${jersey.id}">${stock} Stück</span>
+          <button onclick="adjustStock('${jersey.id}', +1)">+</button>
+        </div>
       </div>
     `;
 

@@ -299,47 +299,134 @@
     }
     .filter-btn:hover { border-color: #111; color: #111; }
     .filter-btn.active { background: #111; color: #fff; border-color: #111; }
+
+    .lang-switcher {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+    .lang-btn {
+      padding: 4px 10px;
+      border: 1px solid #555;
+      border-radius: 4px;
+      background: transparent;
+      color: #aaa;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+    }
+    .lang-btn.active { background: #fff; color: #111; border-color: #fff; }
   </style>
 </head>
 <body>
 
-<div class="admin-bar">⚙️ Admin-Modus — Klicke auf einen Button um den Lagerstand zu ändern</div>
+<div class="admin-bar" id="admin-bar-text">⚙️ Admin-Modus — Klicke auf einen Button um den Lagerstand zu ändern</div>
 
 <header>
   <h1>Trikot Shop</h1>
-  <p>Replica Trikots · 19 € pro Stück</p>
+  <p id="subtitle">Replica Trikots · 19 € pro Stück</p>
   <p class="stats" id="stats"></p>
+  <div class="lang-switcher">
+    <button class="lang-btn" data-lang="de" onclick="setLang('de')">DE</button>
+    <button class="lang-btn" data-lang="tr" onclick="setLang('tr')">TR</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
 </header>
 
 <div class="filter-bar" id="filter-bar">
-  <button class="filter-btn active" onclick="setFilter('all', this)">Alle</button>
-  <button class="filter-btn" onclick="setFilter('turkiye', this)">🇹🇷 Türkiye</button>
-  <button class="filter-btn" onclick="setFilter('national', this)">🌍 Nationalmannschaften</button>
-  <button class="filter-btn" onclick="setFilter('english', this)">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Englische Vereine</button>
-  <button class="filter-btn" onclick="setFilter('deutsch', this)">🇩🇪 Deutsche Vereine</button>
-  <button class="filter-btn" onclick="setFilter('spanisch', this)">🇪🇸 Spanische Vereine</button>
-  <button class="filter-btn" onclick="setFilter('italian', this)">🇮🇹 Italienische Vereine</button>
-  <button class="filter-btn" onclick="setFilter('andere', this)">⚽ Andere Vereine</button>
+  <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">Alle</button>
+  <button class="filter-btn" data-filter="turkiye" onclick="setFilter('turkiye', this)">🇹🇷 Türkiye</button>
+  <button class="filter-btn" data-filter="national" onclick="setFilter('national', this)">🌍 Nationalmannschaften</button>
+  <button class="filter-btn" data-filter="english" onclick="setFilter('english', this)">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Englische Vereine</button>
+  <button class="filter-btn" data-filter="deutsch" onclick="setFilter('deutsch', this)">🇩🇪 Deutsche Vereine</button>
+  <button class="filter-btn" data-filter="spanisch" onclick="setFilter('spanisch', this)">🇪🇸 Spanische Vereine</button>
+  <button class="filter-btn" data-filter="italian" onclick="setFilter('italian', this)">🇮🇹 Italienische Vereine</button>
+  <button class="filter-btn" data-filter="andere" onclick="setFilter('andere', this)">⚽ Andere Vereine</button>
 </div>
 
 <div class="grid" id="grid"></div>
 
 <div class="cart-bar" id="cart-bar">
   <div class="cart-bar-label" id="cart-bar-label"></div>
-  <button class="cart-clear-btn" onclick="clearCart()">Leeren</button>
+  <button class="cart-clear-btn" id="cart-clear-btn" onclick="clearCart()">Leeren</button>
   <button class="cart-send-btn" onclick="sendCart()">
     <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.83.74 5.485 2.032 7.793L0 32l8.456-2.007A15.94 15.94 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 01-6.77-1.848l-.484-.288-5.02 1.192 1.213-4.886-.315-.502A13.253 13.253 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.27-9.942c-.398-.2-2.354-1.161-2.718-1.294-.365-.133-.63-.2-.896.2-.265.398-1.028 1.294-1.26 1.56-.232.265-.465.298-.863.1-.398-.2-1.681-.62-3.2-1.975-1.183-1.055-1.981-2.357-2.213-2.755-.232-.398-.025-.613.174-.812.179-.178.398-.465.597-.697.2-.232.265-.398.398-.663.133-.265.066-.497-.033-.697-.1-.2-.896-2.16-1.228-2.956-.323-.775-.652-.67-.896-.682-.232-.012-.497-.015-.763-.015s-.697.1-1.063.497c-.365.398-1.394 1.362-1.394 3.32s1.427 3.851 1.627 4.116c.2.265 2.81 4.286 6.808 6.013.952.41 1.694.656 2.274.84.954.303 1.824.26 2.51.158.766-.113 2.354-.963 2.686-1.892.333-.93.333-1.726.232-1.892-.099-.166-.365-.265-.763-.464z"/></svg>
-    Alle per WhatsApp anfragen
+    <span id="cart-send-text">Alle per WhatsApp anfragen</span>
   </button>
 </div>
 
-<footer>Bei Interesse einfach per WhatsApp melden.</footer>
+<footer id="footer-text">Bei Interesse einfach per WhatsApp melden.</footer>
 
 <script>
   const WHATSAPP = "4917661678782";
   const IS_ADMIN = new URLSearchParams(location.search).has("admin");
 
   if (IS_ADMIN) document.body.classList.add("admin-mode");
+
+  const LANG_KEY = "trikot-lang";
+  let currentLang = localStorage.getItem(LANG_KEY) || "de";
+
+  const T = {
+    de: {
+      subtitle: "Replica Trikots · 19 € pro Stück",
+      statsAvail: "verfügbar",
+      adminBar: "⚙️ Admin-Modus — Klicke auf einen Button um den Lagerstand zu ändern",
+      filterAll: "Alle", filterNational: "🌍 Nationalmannschaften",
+      filterEnglish: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Englische Vereine", filterDeutsch: "🇩🇪 Deutsche Vereine",
+      filterSpanisch: "🇪🇸 Spanische Vereine", filterItalian: "🇮🇹 Italienische Vereine",
+      filterAndere: "⚽ Andere Vereine",
+      soldBadge: "VERKAUFT", size: "Größe",
+      waBtn: "Per WhatsApp anfragen",
+      cartAdd: "🛒 In den Warenkorb", cartIn: "✓ Im Warenkorb",
+      cartClear: "Leeren", cartSend: "Alle per WhatsApp anfragen",
+      footer: "Bei Interesse einfach per WhatsApp melden.",
+      stock: n => `${n} Stk`,
+      cartLabel: (n, t) => `🛒 <span class="highlight">${n}</span> Trikot${n > 1 ? "s" : ""} · Gesamt: <span class="highlight">${t} €</span>`,
+      waSingle: (name, size) => `Hallo! Ich interessiere mich für das Trikot: ${name} (Größe ${size}) für 19 €. Ist es noch verfügbar?`,
+      waCartLine: (i, name, size) => `${i}. ${name} (Größe ${size}) – 19 €`,
+      waCart: (lines, n, t) => `Hallo! Ich interessiere mich für folgende Trikots:\n\n${lines}\n\nGesamt: ${n} × 19 € = ${t} €\n\nSind sie noch verfügbar?`,
+    },
+    tr: {
+      subtitle: "Replica Formalar · Parça başı 19 €",
+      statsAvail: "mevcut",
+      adminBar: "⚙️ Admin Modu — Stok değiştirmek için butona tıkla",
+      filterAll: "Tümü", filterNational: "🌍 Milli Takımlar",
+      filterEnglish: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 İngiliz Kulüpler", filterDeutsch: "🇩🇪 Alman Kulüpler",
+      filterSpanisch: "🇪🇸 İspanyol Kulüpler", filterItalian: "🇮🇹 İtalyan Kulüpler",
+      filterAndere: "⚽ Diğer Kulüpler",
+      soldBadge: "SATILDI", size: "Beden",
+      waBtn: "WhatsApp'tan sor",
+      cartAdd: "🛒 Sepete ekle", cartIn: "✓ Sepette",
+      cartClear: "Temizle", cartSend: "Tümünü WhatsApp'tan sor",
+      footer: "İlgileniyorsanız WhatsApp'tan yazın.",
+      stock: n => `${n} adet`,
+      cartLabel: (n, t) => `🛒 <span class="highlight">${n}</span> Forma · Toplam: <span class="highlight">${t} €</span>`,
+      waSingle: (name, size) => `Merhaba! ${name} (Beden ${size}) formasıyla ilgileniyorum, 19 €. Hâlâ mevcut mu?`,
+      waCartLine: (i, name, size) => `${i}. ${name} (Beden ${size}) – 19 €`,
+      waCart: (lines, n, t) => `Merhaba! Şu formalarla ilgileniyorum:\n\n${lines}\n\nToplam: ${n} × 19 € = ${t} €\n\nHâlâ mevcut mu?`,
+    },
+    en: {
+      subtitle: "Replica Jerseys · 19 € each",
+      statsAvail: "available",
+      adminBar: "⚙️ Admin Mode — Click a button to change stock",
+      filterAll: "All", filterNational: "🌍 National Teams",
+      filterEnglish: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 English Clubs", filterDeutsch: "🇩🇪 German Clubs",
+      filterSpanisch: "🇪🇸 Spanish Clubs", filterItalian: "🇮🇹 Italian Clubs",
+      filterAndere: "⚽ Other Clubs",
+      soldBadge: "SOLD", size: "Size",
+      waBtn: "Ask via WhatsApp",
+      cartAdd: "🛒 Add to cart", cartIn: "✓ In cart",
+      cartClear: "Clear", cartSend: "Ask all via WhatsApp",
+      footer: "Interested? Just message us on WhatsApp.",
+      stock: n => `${n} pcs`,
+      cartLabel: (n, t) => `🛒 <span class="highlight">${n}</span> Jersey${n > 1 ? "s" : ""} · Total: <span class="highlight">${t} €</span>`,
+      waSingle: (name, size) => `Hi! I'm interested in: ${name} (Size ${size}) for 19 €. Is it still available?`,
+      waCartLine: (i, name, size) => `${i}. ${name} (Size ${size}) – 19 €`,
+      waCart: (lines, n, t) => `Hi! I'm interested in the following jerseys:\n\n${lines}\n\nTotal: ${n} × 19 € = ${t} €\n\nAre they still available?`,
+    }
+  };
 
   const jerseys = [
     {
@@ -623,19 +710,20 @@
     const total = jerseys.length;
     const active = jerseys.filter(j => !isSoldOut(j.id)).length;
     document.getElementById("stats").innerHTML =
-      `<span>${active}</span> / ${total} verfügbar`;
+      `<span>${active}</span> / ${total} ${T[currentLang].statsAvail}`;
   }
 
   function adjustStock(id, delta) {
     const newStock = Math.max(0, getStock(id) + delta);
     stockData[id] = newStock;
+    const t = T[currentLang];
     const card = document.querySelector(`.card[data-jersey-id="${id}"]`);
     if (card) {
       card.classList.toggle("sold-out", newStock === 0);
       const badge = document.getElementById(`stock-badge-${id}`);
-      if (badge) badge.textContent = newStock + " adet";
+      if (badge) badge.textContent = t.stock(newStock);
       const display = document.getElementById(`stock-display-${id}`);
-      if (display) display.textContent = newStock + " Stück";
+      if (display) display.textContent = t.stock(newStock);
     }
     updateStats();
     saveStock();
@@ -645,17 +733,16 @@
 
   async function init() {
     await loadStock();
+    applyLangToStatic();
     updateStats();
     jerseys.forEach((jersey, idx) => {
+      const t = T[currentLang];
       const stock = getStock(jersey.id);
       const soldOut = stock <= 0;
     const card = document.createElement("div");
     card.className = "card" + (soldOut ? " sold-out" : "");
     card.dataset.category = jersey.category;
     card.dataset.jerseyId = jersey.id;
-
-    const msg = encodeURIComponent(`Hallo! Ich interessiere mich für das Trikot: ${jersey.name} (Größe ${jersey.size}) für 19 €. Ist es noch verfügbar?`);
-    const waLink = `https://wa.me/${WHATSAPP}?text=${msg}`;
 
     const imgTags = jersey.images.map((src, i) =>
       `<img src="${src}" class="${i === 0 ? "active" : ""}" loading="lazy" alt="${jersey.name}">`
@@ -670,29 +757,29 @@
     card.innerHTML = `
       <div class="gallery" id="gallery-${idx}">
         ${imgTags}
-        <span class="sold-badge">VERKAUFT</span>
-        <span class="stock-badge" id="stock-badge-${jersey.id}">${stock} adet</span>
+        <span class="sold-badge">${t.soldBadge}</span>
+        <span class="stock-badge" id="stock-badge-${jersey.id}">${t.stock(stock)}</span>
       </div>
       <div class="thumbs">${thumbTags}</div>
       <div class="info">
         <h2>${jersey.name}</h2>
         ${jersey.detail ? `<p style="font-size:0.78rem;color:#777;margin-top:3px">${jersey.detail}</p>` : ""}
         <div class="meta">
-          <span class="size-badge">Größe ${jersey.size}</span>
+          <span class="size-badge" id="size-${jersey.id}">${t.size} ${jersey.size}</span>
           <span class="price">19 €</span>
         </div>
-        <a class="wa-btn" href="${waLink}" target="_blank" rel="noopener">
+        <button class="wa-btn" onclick="openWA('${jersey.id}')">
           <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor">
             <path d="M16 0C7.163 0 0 7.163 0 16c0 2.83.74 5.485 2.032 7.793L0 32l8.456-2.007A15.94 15.94 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333a13.27 13.27 0 01-6.77-1.848l-.484-.288-5.02 1.192 1.213-4.886-.315-.502A13.253 13.253 0 012.667 16C2.667 8.636 8.636 2.667 16 2.667S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.27-9.942c-.398-.2-2.354-1.161-2.718-1.294-.365-.133-.63-.2-.896.2-.265.398-1.028 1.294-1.26 1.56-.232.265-.465.298-.863.1-.398-.2-1.681-.62-3.2-1.975-1.183-1.055-1.981-2.357-2.213-2.755-.232-.398-.025-.613.174-.812.179-.178.398-.465.597-.697.2-.232.265-.398.398-.663.133-.265.066-.497-.033-.697-.1-.2-.896-2.16-1.228-2.956-.323-.775-.652-.67-.896-.682-.232-.012-.497-.015-.763-.015s-.697.1-1.063.497c-.365.398-1.394 1.362-1.394 3.32s1.427 3.851 1.627 4.116c.2.265 2.81 4.286 6.808 6.013.952.41 1.694.656 2.274.84.954.303 1.824.26 2.51.158.766-.113 2.354-.963 2.686-1.892.333-.93.333-1.726.232-1.892-.099-.166-.365-.265-.763-.464z"/>
           </svg>
-          Per WhatsApp anfragen
-        </a>
+          <span class="wa-text">${t.waBtn}</span>
+        </button>
         <button class="cart-btn" data-id="${jersey.id}" onclick="toggleCart('${jersey.id}', this)">
-          🛒 In den Warenkorb
+          ${t.cartAdd}
         </button>
         <div class="stock-controls">
           <button onclick="adjustStock('${jersey.id}', -1)">−</button>
-          <span class="stock-count-display" id="stock-display-${jersey.id}">${stock} Stück</span>
+          <span class="stock-count-display" id="stock-display-${jersey.id}">${t.stock(stock)}</span>
           <button onclick="adjustStock('${jersey.id}', +1)">+</button>
         </div>
       </div>
@@ -707,21 +794,23 @@
   let cart = [];
 
   function toggleCart(id, btn) {
+    const t = T[currentLang];
     const jersey = jerseys.find(j => j.id === id);
     const idx = cart.findIndex(j => j.id === id);
     if (idx === -1) {
       cart.push(jersey);
-      btn.textContent = "✓ Im Warenkorb";
+      btn.textContent = t.cartIn;
       btn.classList.add("in-cart");
     } else {
       cart.splice(idx, 1);
-      btn.textContent = "🛒 In den Warenkorb";
+      btn.textContent = t.cartAdd;
       btn.classList.remove("in-cart");
     }
     updateCartBar();
   }
 
   function updateCartBar() {
+    const t = T[currentLang];
     const bar = document.getElementById("cart-bar");
     const label = document.getElementById("cart-bar-label");
     if (cart.length === 0) {
@@ -732,13 +821,14 @@
     bar.classList.add("visible");
     document.body.classList.add("has-cart");
     const total = cart.length * 19;
-    label.innerHTML = `🛒 <span class="highlight">${cart.length}</span> Trikot${cart.length > 1 ? "s" : ""} · Gesamt: <span class="highlight">${total} €</span>`;
+    label.innerHTML = t.cartLabel(cart.length, total);
   }
 
   function clearCart() {
+    const t = T[currentLang];
     cart = [];
     document.querySelectorAll(".cart-btn").forEach(btn => {
-      btn.textContent = "🛒 In den Warenkorb";
+      btn.textContent = t.cartAdd;
       btn.classList.remove("in-cart");
     });
     updateCartBar();
@@ -746,12 +836,62 @@
 
   function sendCart() {
     if (cart.length === 0) return;
-    const lines = cart.map((j, i) => `${i + 1}. ${j.name} (Größe ${j.size}) – 19 €`).join("\n");
+    const t = T[currentLang];
+    const lines = cart.map((j, i) => t.waCartLine(i + 1, j.name, j.size)).join("\n");
     const total = cart.length * 19;
-    const msg = encodeURIComponent(
-      `Hallo! Ich interessiere mich für folgende Trikots:\n\n${lines}\n\nGesamt: ${cart.length} × 19 € = ${total} €\n\nSind sie noch verfügbar?`
-    );
+    const msg = encodeURIComponent(t.waCart(lines, cart.length, total));
     window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, "_blank");
+  }
+
+  function openWA(id) {
+    const jersey = jerseys.find(j => j.id === id);
+    const t = T[currentLang];
+    const msg = encodeURIComponent(t.waSingle(jersey.name, jersey.size));
+    window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, "_blank");
+  }
+
+  function applyLangToStatic() {
+    const t = T[currentLang];
+    document.getElementById("subtitle").textContent = t.subtitle;
+    document.getElementById("admin-bar-text").textContent = t.adminBar;
+    document.getElementById("footer-text").textContent = t.footer;
+    document.getElementById("cart-clear-btn").textContent = t.cartClear;
+    document.getElementById("cart-send-text").textContent = t.cartSend;
+    document.querySelector("[data-filter='all']").textContent = t.filterAll;
+    document.querySelector("[data-filter='national']").textContent = t.filterNational;
+    document.querySelector("[data-filter='english']").textContent = t.filterEnglish;
+    document.querySelector("[data-filter='deutsch']").textContent = t.filterDeutsch;
+    document.querySelector("[data-filter='spanisch']").textContent = t.filterSpanisch;
+    document.querySelector("[data-filter='italian']").textContent = t.filterItalian;
+    document.querySelector("[data-filter='andere']").textContent = t.filterAndere;
+    document.querySelectorAll(".lang-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.lang === currentLang);
+    });
+  }
+
+  function setLang(lang) {
+    currentLang = lang;
+    localStorage.setItem(LANG_KEY, lang);
+    const t = T[lang];
+    applyLangToStatic();
+    updateStats();
+    updateCartBar();
+    jerseys.forEach(jersey => {
+      const stock = getStock(jersey.id);
+      const inCart = cart.some(j => j.id === jersey.id);
+      const sizeBadge = document.getElementById(`size-${jersey.id}`);
+      if (sizeBadge) sizeBadge.textContent = `${t.size} ${jersey.size}`;
+      const waText = document.querySelector(`.card[data-jersey-id="${jersey.id}"] .wa-text`);
+      if (waText) waText.textContent = t.waBtn;
+      const cartBtn = document.querySelector(`.card[data-jersey-id="${jersey.id}"] .cart-btn`);
+      if (cartBtn) cartBtn.textContent = inCart ? t.cartIn : t.cartAdd;
+      const soldBadge = document.querySelector(`.card[data-jersey-id="${jersey.id}"] .sold-badge`);
+      if (soldBadge) soldBadge.textContent = t.soldBadge;
+      const stockBadge = document.getElementById(`stock-badge-${jersey.id}`);
+      if (stockBadge) stockBadge.textContent = t.stock(stock);
+      const stockDisplay = document.getElementById(`stock-display-${jersey.id}`);
+      if (stockDisplay) stockDisplay.textContent = t.stock(stock);
+    });
   }
 
   let activeFilter = "all";

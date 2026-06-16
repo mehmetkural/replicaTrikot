@@ -776,7 +776,12 @@
     await loadStock();
     applyLangToStatic();
     updateStats();
-    jerseys.forEach((jersey, idx) => {
+    const sortedJerseys = [...jerseys].sort((a, b) => {
+      const aSoldOut = getStock(a.id) <= 0;
+      const bSoldOut = getStock(b.id) <= 0;
+      return aSoldOut === bSoldOut ? 0 : aSoldOut ? 1 : -1;
+    });
+    sortedJerseys.forEach((jersey, idx) => {
       const t = T[currentLang];
       const stock = getStock(jersey.id);
       const soldOut = stock <= 0;

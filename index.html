@@ -373,6 +373,7 @@
     de: {
       subtitle: "Replica Trikots · 19 € pro Stück",
       statsAvail: "verfügbar",
+      statsLine: (p, m) => `<span>${p}</span> Stück · <span>${m}</span> Modelle verfügbar`,
       adminBar: "⚙️ Admin-Modus — Klicke auf einen Button um den Lagerstand zu ändern",
       filterAll: "Alle", filterNational: "🌍 Nationalmannschaften",
       filterEnglish: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Englische Vereine", filterDeutsch: "🇩🇪 Deutsche Vereine",
@@ -392,6 +393,7 @@
     tr: {
       subtitle: "Replica Formalar · Parça başı 19 €",
       statsAvail: "mevcut",
+      statsLine: (p, m) => `<span>${p}</span> adet · <span>${m}</span> farklı model mevcut`,
       adminBar: "⚙️ Admin Modu — Stok değiştirmek için butona tıkla",
       filterAll: "Tümü", filterNational: "🌍 Milli Takımlar",
       filterEnglish: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 İngiliz Kulüpler", filterDeutsch: "🇩🇪 Alman Kulüpler",
@@ -411,6 +413,7 @@
     en: {
       subtitle: "Replica Jerseys · 19 € each",
       statsAvail: "available",
+      statsLine: (p, m) => `<span>${p}</span> pcs · <span>${m}</span> unique jerseys available`,
       adminBar: "⚙️ Admin Mode — Click a button to change stock",
       filterAll: "All", filterNational: "🌍 National Teams",
       filterEnglish: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 English Clubs", filterDeutsch: "🇩🇪 German Clubs",
@@ -750,9 +753,10 @@
   function updateStats() {
     const total = jerseys.length;
     const active = jerseys.filter(j => !isSoldOut(j.id)).length;
+    const totalPieces = jerseys.reduce((sum, j) => sum + getStock(j.id), 0);
     document.getElementById("stats").innerHTML = IS_ADMIN
-      ? `<span>${active}</span> / ${total} ${T[currentLang].statsAvail}`
-      : `<span>${active}</span> ${T[currentLang].statsAvail}`;
+      ? `<span>${active}</span> / ${total} ${T[currentLang].statsAvail} · <span>${totalPieces}</span> Stk gesamt`
+      : T[currentLang].statsLine(totalPieces, active);
   }
 
   function adjustStock(id, delta) {

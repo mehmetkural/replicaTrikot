@@ -750,8 +750,9 @@
   function updateStats() {
     const total = jerseys.length;
     const active = jerseys.filter(j => !isSoldOut(j.id)).length;
-    document.getElementById("stats").innerHTML =
-      `<span>${active}</span> / ${total} ${T[currentLang].statsAvail}`;
+    document.getElementById("stats").innerHTML = IS_ADMIN
+      ? `<span>${active}</span> / ${total} ${T[currentLang].statsAvail}`
+      : `<span>${active}</span> ${T[currentLang].statsAvail}`;
   }
 
   function adjustStock(id, delta) {

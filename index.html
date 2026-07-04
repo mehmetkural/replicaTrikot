@@ -831,11 +831,12 @@
     updateStats();
     const visibleJerseys = IS_ADMIN ? jerseys : jerseys.filter(j => !isSoldOut(j.id));
     const isStarPlayer = j => /Ronaldo|Messi|Yamal/.test(j.name);
+    const starRank = j => !isStarPlayer(j) ? 2 : j.category === "national" ? 0 : 1;
     const sortedJerseys = [...visibleJerseys].sort((a, b) => {
       const aSoldOut = getStock(a.id) <= 0;
       const bSoldOut = getStock(b.id) <= 0;
       if (aSoldOut !== bSoldOut) return aSoldOut ? 1 : -1;
-      return (isStarPlayer(a) ? 0 : 1) - (isStarPlayer(b) ? 0 : 1);
+      return starRank(a) - starRank(b);
     });
     sortedJerseys.forEach((jersey, idx) => {
       const t = T[currentLang];

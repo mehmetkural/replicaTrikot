@@ -829,7 +829,8 @@
     await loadStock();
     applyLangToStatic();
     updateStats();
-    const sortedJerseys = [...jerseys].sort((a, b) => {
+    const visibleJerseys = IS_ADMIN ? jerseys : jerseys.filter(j => !isSoldOut(j.id));
+    const sortedJerseys = [...visibleJerseys].sort((a, b) => {
       const aSoldOut = getStock(a.id) <= 0;
       const bSoldOut = getStock(b.id) <= 0;
       return aSoldOut === bSoldOut ? 0 : aSoldOut ? 1 : -1;

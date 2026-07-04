@@ -830,10 +830,12 @@
     applyLangToStatic();
     updateStats();
     const visibleJerseys = IS_ADMIN ? jerseys : jerseys.filter(j => !isSoldOut(j.id));
+    const isStarPlayer = j => /Ronaldo|Messi|Yamal/.test(j.name);
     const sortedJerseys = [...visibleJerseys].sort((a, b) => {
       const aSoldOut = getStock(a.id) <= 0;
       const bSoldOut = getStock(b.id) <= 0;
-      return aSoldOut === bSoldOut ? 0 : aSoldOut ? 1 : -1;
+      if (aSoldOut !== bSoldOut) return aSoldOut ? 1 : -1;
+      return (isStarPlayer(a) ? 0 : 1) - (isStarPlayer(b) ? 0 : 1);
     });
     sortedJerseys.forEach((jersey, idx) => {
       const t = T[currentLang];

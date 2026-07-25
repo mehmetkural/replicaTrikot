@@ -373,6 +373,7 @@
   <button class="filter-btn" data-filter="spanisch" onclick="setFilter('spanisch', this)">🇪🇸 Spanische Vereine</button>
   <button class="filter-btn" data-filter="italian" onclick="setFilter('italian', this)">🇮🇹 Italienische Vereine</button>
   <button class="filter-btn" data-filter="andere" onclick="setFilter('andere', this)">⚽ Andere Vereine</button>
+  <button class="filter-btn" data-filter="kids" onclick="setFilter('kids', this)">🧒 Kinder</button>
 </div>
 
 <div class="grid" id="grid"></div>
@@ -406,7 +407,7 @@
       filterAll: "Alle", filterNational: "🌍 Nationalmannschaften",
       filterEnglish: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Englische Vereine", filterDeutsch: "🇩🇪 Deutsche Vereine",
       filterSpanisch: "🇪🇸 Spanische Vereine", filterItalian: "🇮🇹 Italienische Vereine",
-      filterAndere: "⚽ Andere Vereine",
+      filterAndere: "⚽ Andere Vereine", filterKids: "🧒 Kinder",
       soldBadge: "VERKAUFT", size: "Größe",
       waBtn: "Per WhatsApp anfragen",
       cartAdd: "🛒 In den Warenkorb", cartIn: "✓ Im Warenkorb",
@@ -426,7 +427,7 @@
       filterAll: "Tümü", filterNational: "🌍 Milli Takımlar",
       filterEnglish: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 İngiliz Kulüpler", filterDeutsch: "🇩🇪 Alman Kulüpler",
       filterSpanisch: "🇪🇸 İspanyol Kulüpler", filterItalian: "🇮🇹 İtalyan Kulüpler",
-      filterAndere: "⚽ Diğer Kulüpler",
+      filterAndere: "⚽ Diğer Kulüpler", filterKids: "🧒 Çocuk",
       soldBadge: "SATILDI", size: "Beden",
       waBtn: "WhatsApp'tan sor",
       cartAdd: "🛒 Sepete ekle", cartIn: "✓ Sepette",
@@ -446,7 +447,7 @@
       filterAll: "All", filterNational: "🌍 National Teams",
       filterEnglish: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 English Clubs", filterDeutsch: "🇩🇪 German Clubs",
       filterSpanisch: "🇪🇸 Spanish Clubs", filterItalian: "🇮🇹 Italian Clubs",
-      filterAndere: "⚽ Other Clubs",
+      filterAndere: "⚽ Other Clubs", filterKids: "🧒 Kids",
       soldBadge: "SOLD", size: "Size",
       waBtn: "Ask via WhatsApp",
       cartAdd: "🛒 Add to cart", cartIn: "✓ In cart",
@@ -912,7 +913,7 @@
       name: "Real Madrid #24 Arda Güler",
       detail: "Away · Mavi 2023–24 · Çocuk 10 Yaş",
       size: "140",
-      category: "spanisch",
+      category: "kids",
       arda: true,
       images: ["images/IMG_1456.jpeg","images/IMG_1457.jpeg"]
     },
@@ -966,7 +967,7 @@
       name: "Napoli #77 Kvaratskhelia",
       detail: "Home · Lete MSC · Çocuk 14 Yaş",
       size: "164",
-      category: "italian",
+      category: "kids",
       arda: true,
       images: ["images/IMG_1468.jpeg","images/IMG_1469.jpeg"]
     },
@@ -975,7 +976,7 @@
       name: "Napoli #77 Kvaratskhelia",
       detail: "Home · Lete MSC · Çocuk 16 Yaş",
       size: "176",
-      category: "italian",
+      category: "kids",
       arda: true,
       images: ["images/IMG_1468.jpeg","images/IMG_1469.jpeg"]
     },
@@ -993,7 +994,7 @@
       name: "Galatasaray #9 Icardi",
       detail: "Special Edition · Lion · Sixt · Çocuk 16 Yaş",
       size: "176",
-      category: "turkiye",
+      category: "kids",
       arda: true,
       images: ["images/IMG_1472.jpeg","images/IMG_1473.jpeg"]
     },
@@ -1002,7 +1003,7 @@
       name: "Galatasaray #9 Icardi",
       detail: "Special Edition · Lion · Sixt · Çocuk 14 Yaş",
       size: "164",
-      category: "turkiye",
+      category: "kids",
       arda: true,
       images: ["images/IMG_1472.jpeg","images/IMG_1473.jpeg"]
     },
@@ -1313,6 +1314,7 @@
     document.querySelector("[data-filter='spanisch']").textContent = t.filterSpanisch;
     document.querySelector("[data-filter='italian']").textContent = t.filterItalian;
     document.querySelector("[data-filter='andere']").textContent = t.filterAndere;
+    document.querySelector("[data-filter='kids']").textContent = t.filterKids;
     document.querySelectorAll(".lang-btn").forEach(btn => {
       btn.classList.toggle("active", btn.dataset.lang === currentLang);
     });
